@@ -10677,6 +10677,8 @@ html {
 
 body {
   font-family: "Oxygen", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .app {
@@ -10698,15 +10700,30 @@ body {
   flex: 1;
   flex-wrap: wrap;
   justify-content: center;
-  width: 260px;
   align-self: center;
+  width: 260px;
+  color: white;
 }
 
 .calculator__result {
   width: 100%;
-  padding: 0.4rem;
-  font-size: 3rem;
+  padding: 4.5rem 2.4rem;
+  background: #29363b;
   text-align: right;
+  line-height: 1;
+}
+
+.calculator__result-calculation {
+  font-size: 2.8rem;
+  opacity: 0.5;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.calculator__result-answer {
+  font-size: 6rem;
 }
 
 .calculator__buttons {
@@ -10717,12 +10734,29 @@ body {
 
 .calculator__button {
   width: 25%;
-  padding: 0.5rem;
-  font-size: 2rem;
+  padding: 1.6rem 0;
+  background: #f6827a;
+  border-top: 1px solid #29363b33;
+  font-size: 2.6rem;
+  line-height: 1;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  transition: all 0.2s ease;
+}
+
+.calculator__button:active {
+  opacity: 0.8;
+}
+
+.calculator__button--operation {
+  background: #f7ba86;
+}
+
+.calculator__button--clear,
+.calculator__button--save {
+  background: #ec475c;
 }
 
 .calculator__button--wide {

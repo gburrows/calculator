@@ -21,6 +21,8 @@ html {
 
 body {
     font-family: $font-family-sans-serif;
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .app {
@@ -42,14 +44,26 @@ body {
     flex: 1;
     flex-wrap: wrap;
     justify-content: center;
-    width: 260px;
     align-self: center;
+    width: 260px;
+    color: white;
     
     &__result {
         width: 100%;
-        padding: .4rem;
-        font-size: 3rem;
+        padding: 4.5rem 2.4rem;
+        background: $dark-grey;
         text-align: right;
+        line-height: 1;
+
+        &-calculation {
+            font-size: 2.8rem;
+            opacity: .5;
+            user-select: none;
+        }
+
+        &-answer {
+            font-size: 6rem;
+        }
     }
     
     &__buttons {
@@ -60,17 +74,32 @@ body {
     
     &__button {
         width: 25%;
-        padding: .5rem;
-        // border: .2rem solid #f1f1f1;
-        font-size: 2rem;
+        padding: 1.6rem 0;
+        background: $pink;
+        border-top: 1px solid #29363b33;
+        font-size: 2.6rem;
+        line-height: 1;
         user-select: none;
+        transition: all .2s ease;
         
         &:active {
-            // background: #aaa;
+            opacity: .8;
+        }
+
+        &--number {
+        }
+
+        &--operation {
+            background: $orange;
+        }
+
+        &--clear, &--save {
+            background: $red;
         }
 
         &--wide {
             width: 50%;
         }
+
     }
 }

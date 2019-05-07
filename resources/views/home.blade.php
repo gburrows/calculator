@@ -15,7 +15,7 @@
         <div class="calculator">
             <div class="calculator__result">
                 <div class="calculator__result-calculation">
-                    &nbsp;
+                    
                 </div>
                 <div class="calculator__result-answer">
                     0
