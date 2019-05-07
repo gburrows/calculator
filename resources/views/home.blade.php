@@ -10,12 +10,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
 </head>
 <body>
-<div class="app">
+<div class="app" style="opacity: 0;">
     <div class="app__inner">
         <div class="calculator">
             <div class="calculator__result">
                 <div class="calculator__result-calculation">
-                    
+                    &nbsp;
                 </div>
                 <div class="calculator__result-answer">
                     0
