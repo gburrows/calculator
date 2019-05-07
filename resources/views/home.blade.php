@@ -6,8 +6,8 @@
 
     <title>Calculator</title>
 
+    <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Oxygen:300,400,700" rel="stylesheet">
 </head>
 <body>
 <div class="app">
@@ -46,6 +46,7 @@
     </div>
 </div>
 
+<script src="/js/app.js"></script>
 </body>
 
 </html>
