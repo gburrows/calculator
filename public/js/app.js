@@ -149,7 +149,7 @@ var app = function app() {
           this.equalsLocked = false;
         }
 
-        this.resultAnswer.innerText = this.currentNumber;
+        this.resultAnswer.innerText = numberWithCommas(this.currentNumber);
         adjustFontSizeResultAnswer();
       }
     }, {
@@ -174,18 +174,19 @@ var app = function app() {
         if (this.currentNumber === null || this.equalsUsed) return; // Update calculation area
 
         if (this.currentCalculation !== null) {
-          this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
+          this.currentCalculation = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' ' + operation;
         } else {
-          this.currentCalculation = this.currentNumber + ' ' + operation;
+          this.currentCalculation = numberWithCommas(this.currentNumber) + ' ' + operation;
         } // Show sum in answer area
 
 
         if (this.operationUsed) {
           this.calculateNewTotal();
-          this.resultAnswer.innerText = this.totalSum;
+          this.resultAnswer.innerText = numberWithCommas(this.totalSum);
           adjustFontSizeResultAnswer();
         } else {
-          this.totalSum = parseInt(this.resultAnswer.innerText);
+          this.totalSum = numberRemoveCommas(this.resultAnswer.innerText); // debugger;
+
           this.resultAnswer.innerText = 0;
           adjustFontSizeResultAnswer();
           this.operationUsed = true;
@@ -201,7 +202,7 @@ var app = function app() {
       key: "calculateNewTotal",
       value: function calculateNewTotal() {
         if (this.totalSum === null) return;
-        var currentNumberInt = parseFloat(this.currentNumber);
+        var currentNumberInt = parseFloat(this.currentNumber); // debugger;
 
         switch (this.currentOperation) {
           case '÷':
@@ -235,10 +236,10 @@ var app = function app() {
         }
 
         this.calculateNewTotal();
-        this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
-        this.resultAnswer.innerText = this.totalSum;
+        this.resultCalculation.innerText = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' =';
+        this.resultAnswer.innerText = numberWithCommas(this.totalSum);
         adjustFontSizeResultAnswer();
-        this.equalsUsed = true;
+        this.equalsUsed = true; // debugger;
       }
     }, {
       key: "clear",
@@ -294,7 +295,20 @@ var app = function app() {
           break;
       }
     });
-  }); // Adjust font size based on string length  
+  });
+
+  function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  }
+
+  function numberRemoveCommas(x) {
+    x = x.replace(/\,/g, '');
+    x = parseInt(x, 10);
+    return x;
+  } // Adjust font size based on string length  
+
 
   function adjustFontSizeResultAnswer() {
     if (resultAnswer.innerText.length > 12) {
@@ -309,15 +323,12 @@ var app = function app() {
   function adjustFontSizeResultCalculation() {
     if (resultCalculation.innerText.length > 22) {
       resultCalculation.style.fontSize = '1.6rem';
-      resultCalculation.style.height = '3.8rem';
       resultCalculation.style.lineHeight = '1.8rem';
-    } else if (resultCalculation.innerText.length >= 15) {
+    } else if (resultCalculation.innerText.length >= 13) {
       resultCalculation.style.fontSize = '1.8em';
-      resultCalculation.style.height = '2.8rem';
-      resultCalculation.style.lineHeight = '2.8rem';
-    } else if (resultCalculation.innerText.length < 14) {
+      resultCalculation.style.lineHeight = '2rem';
+    } else if (resultCalculation.innerText.length < 12) {
       resultCalculation.style.fontSize = '2.8rem';
-      resultCalculation.style.height = '2.8rem';
       resultCalculation.style.lineHeight = '2.8rem';
     }
   }
