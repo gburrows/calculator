@@ -75,6 +75,7 @@ const app = () => {
       this.currentOperation = operation;
       this.resultCalculation.innerText = this.currentCalculation;
       this.currentNumber = null;
+      this.equalsLocked = true;
     }
 
     enterDecimal() {

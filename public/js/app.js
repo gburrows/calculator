@@ -176,6 +176,7 @@ var app = function app() {
         this.currentOperation = operation;
         this.resultCalculation.innerText = this.currentCalculation;
         this.currentNumber = null;
+        this.equalsLocked = true;
       }
     }, {
       key: "enterDecimal",
