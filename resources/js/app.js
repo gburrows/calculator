@@ -17,13 +17,14 @@ const app = () => {
 		constructor(resultAnswer, resultCalculation) {
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
-      this.totalSum = null;
-      this.totalString = null;
-      this.previousNumber = null;
+      this.totalSum = 0;
+      // this.totalString = null;
+      // this.previousNumber = null;
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
       this.equalsUsed = false;
+      this.operationUsed = false;
     }
     
     enterNumber(number) {
@@ -38,25 +39,31 @@ const app = () => {
         this.currentNumber = number;
       }
       this.resultAnswer.innerText = this.currentNumber;
-      console.log('fdsalkh', typeof this.currentNumber)
     }
 
     enterOperation(operation) {
       // Return if not entered a number OR equals has been used
       if (this.currentNumber === null || this.equalsUsed) return;
 
-      this.totalSum = parseInt(this.resultAnswer.innerText);
-      this.currentOperation = operation;
-
-      // Shows sum from using operations
+      // Update calculation area
       if (this.currentCalculation !== null) {
         this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
       } else {
         this.currentCalculation = this.currentNumber + ' ' + operation;
       }
 
+      // Show sum in answer area
+      if (this.operationUsed) {
+        this.calculateNewTotal();
+        this.resultAnswer.innerText = this.totalSum;
+      } else {
+        this.totalSum = parseInt(this.resultAnswer.innerText);
+        this.resultAnswer.innerText = 0;
+        this.operationUsed = true;
+      }
+      
+      this.currentOperation = operation;
       this.resultCalculation.innerText = this.currentCalculation;
-      this.resultAnswer.innerText = 0;
       this.currentNumber = null;
     }
 
@@ -68,7 +75,6 @@ const app = () => {
 
       let currentNumberInt = parseInt(this.currentNumber);
 
-      
       switch(this.currentOperation) {
         case '÷':
           this.totalSum = this.totalSum / currentNumberInt;
@@ -96,8 +102,10 @@ const app = () => {
       this.resultAnswer.innerText = '0';
       this.resultCalculation.innerText = '';
       this.currentCalculation = null;
+      this.currentOperation = null;
       this.currentNumber = null;
       this.equalsUsed = false;
+      this.operationUsed = false;
     }
 
     save() {

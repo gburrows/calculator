@@ -93,8 +93,6 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -120,13 +118,14 @@ var app = function app() {
 
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
-      this.totalSum = null;
-      this.totalString = null;
-      this.previousNumber = null;
+      this.totalSum = 0; // this.totalString = null;
+      // this.previousNumber = null;
+
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
       this.equalsUsed = false;
+      this.operationUsed = false;
     }
 
     _createClass(Calculator, [{
@@ -144,24 +143,31 @@ var app = function app() {
         }
 
         this.resultAnswer.innerText = this.currentNumber;
-        console.log('fdsalkh', _typeof(this.currentNumber));
       }
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {
         // Return if not entered a number OR equals has been used
-        if (this.currentNumber === null || this.equalsUsed) return;
-        this.totalSum = parseInt(this.resultAnswer.innerText);
-        this.currentOperation = operation; // Shows sum from using operations
+        if (this.currentNumber === null || this.equalsUsed) return; // Update calculation area
 
         if (this.currentCalculation !== null) {
           this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
         } else {
           this.currentCalculation = this.currentNumber + ' ' + operation;
+        } // Show sum in answer area
+
+
+        if (this.operationUsed) {
+          this.calculateNewTotal();
+          this.resultAnswer.innerText = this.totalSum;
+        } else {
+          this.totalSum = parseInt(this.resultAnswer.innerText);
+          this.resultAnswer.innerText = 0;
+          this.operationUsed = true;
         }
 
+        this.currentOperation = operation;
         this.resultCalculation.innerText = this.currentCalculation;
-        this.resultAnswer.innerText = 0;
         this.currentNumber = null;
       }
     }, {
@@ -205,8 +211,10 @@ var app = function app() {
         this.resultAnswer.innerText = '0';
         this.resultCalculation.innerText = '';
         this.currentCalculation = null;
+        this.currentOperation = null;
         this.currentNumber = null;
         this.equalsUsed = false;
+        this.operationUsed = false;
       }
     }, {
       key: "save",
