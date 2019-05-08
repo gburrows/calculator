@@ -118,7 +118,7 @@ var app = function app() {
 
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
-      this.totalSum = 0;
+      this.totalSum = null;
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
@@ -138,7 +138,20 @@ var app = function app() {
       }
     }, {
       key: "enterOperation",
-      value: function enterOperation(operation) {}
+      value: function enterOperation(operation) {
+        if (this.currentNumber === null) return;
+        this.currentOperation = operation;
+
+        if (this.currentCalculation !== null) {
+          this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
+        } else {
+          this.currentCalculation = this.currentNumber + ' ' + operation;
+        }
+
+        this.resultCalculation.innerText = this.currentCalculation;
+        this.resultAnswer.innerText = 0;
+        this.currentNumber = null;
+      }
     }, {
       key: "enterDecimal",
       value: function enterDecimal() {}
@@ -149,6 +162,8 @@ var app = function app() {
       key: "clear",
       value: function clear() {
         this.resultAnswer.innerText = '0';
+        this.resultCalculation.innerText = '';
+        this.currentCalculation = null;
         this.currentNumber = null;
       }
     }, {

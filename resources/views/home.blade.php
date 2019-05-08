@@ -24,11 +24,11 @@
             <div class="calculator__buttons">
                 <button class="calculator__button calculator__button--clear" data-clear>AC</button>
                 <button class="calculator__button calculator__button--save calculator__button--wide" data-save>SAVE</button>
-                <button class="calculator__button calculator__button--operation" data-operation="/">÷</button>
+                <button class="calculator__button calculator__button--operation" data-operation="÷">÷</button>
                 <button class="calculator__button calculator__button--decimal" data-decimal>.</button>
                 <button class="calculator__button calculator__button--number" data-number="0">0</button>
                 <button class="calculator__button calculator__button--blank"></button>
-                <button class="calculator__button calculator__button--operation" data-operation="*">×</button>
+                <button class="calculator__button calculator__button--operation" data-operation="×">×</button>
                 <button class="calculator__button calculator__button--number" data-number="1">1</button>
                 <button class="calculator__button calculator__button--number" data-number="2">2</button>
                 <button class="calculator__button calculator__button--number" data-number="3">3</button>

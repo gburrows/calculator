@@ -17,7 +17,7 @@ const app = () => {
 		constructor(resultAnswer, resultCalculation) {
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
-      this.totalSum = 0;
+      this.totalSum = null;
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
@@ -34,16 +34,31 @@ const app = () => {
     }
 
     enterOperation(operation) {
+      if (this.currentNumber === null) return;
+
+      this.currentOperation = operation;
+
+      if (this.currentCalculation !== null) {
+        this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
+      } else {
+        this.currentCalculation = this.currentNumber + ' ' + operation;
+      }
+      this.resultCalculation.innerText = this.currentCalculation;
+      this.resultAnswer.innerText = 0;
+      this.currentNumber = null;
     }
 
     enterDecimal() {
     }
 
     equals() {
+
     }
 
     clear() {
       this.resultAnswer.innerText = '0';
+      this.resultCalculation.innerText = '';
+      this.currentCalculation = null;
       this.currentNumber = null;
     }
 
