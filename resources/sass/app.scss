@@ -8,98 +8,98 @@
 @import '~bootstrap/scss/bootstrap';
 
 * {
-    box-sizing: border-box
+	box-sizing: border-box
 }
 
 html, body {
-    height: 100%;
+	height: 100%;
 }
 
 html {
-    font-size: 62.5%;
+	font-size: 62.5%;
 }
 
 body {
-    font-family: $font-family-sans-serif;
-    -webkit-font-smoothing: antialiased;
+	font-family: $font-family-sans-serif;
+	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
 .app {
-    position: relative;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
-    height: 100%;
-    transition: opacity .3s ease;
-    text-align: center;
-
-    &__inner {
-        display: flex;
-    }
+	position: relative;
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: center;
+	height: 100%;
+	transition: opacity .3s ease;
+	text-align: center;
+	
+	&__inner {
+		display: flex;
+	}
 }
 
 .calculator {
-    display: flex;
-    flex: 1;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-self: center;
-    width: 260px;
-    color: white;
-    
-    &__result {
-        width: 100%;
-        padding: 4.5rem 2.4rem;
-        background: $dark-grey;
-        text-align: right;
-        line-height: 1;
-
-        &-calculation {
-            font-size: 2.8rem;
-            opacity: .5;
-            user-select: none;
-        }
-
-        &-answer {
-            font-size: 6rem;
-        }
-    }
-    
-    &__buttons {
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-    }
-    
-    &__button {
-        width: 25%;
-        padding: 1.6rem 0;
-        background: $pink;
-        border-top: 1px solid #29363b33;
-        font-size: 2.6rem;
-        line-height: 1;
-        user-select: none;
-        transition: all .2s ease;
-        
-        &:active {
-            opacity: .8;
-        }
-
-        &--number {
-        }
-
-        &--operation {
-            background: $orange;
-        }
-
-        &--clear, &--save {
-            background: $red;
-        }
-
-        &--wide {
-            width: 50%;
-        }
-
-    }
+	display: flex;
+	flex: 1;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-self: center;
+	width: 260px;
+	color: white;
+	
+	&__result {
+		width: 100%;
+		padding: 4.5rem 2.4rem;
+		background: $dark-grey;
+		text-align: right;
+		line-height: 1;
+		
+		&-calculation {
+			font-size: 2.8rem;
+			opacity: .5;
+			user-select: none;
+		}
+		
+		&-answer {
+			font-size: 6rem;
+		}
+	}
+	
+	&__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+	
+	&__button {
+		width: 25%;
+		padding: 1.6rem 0;
+		background: $pink;
+		border-top: 1px solid #29363b33;
+		font-size: 2.6rem;
+		line-height: 1;
+		user-select: none;
+		transition: all .2s ease;
+		
+		&:active {
+			opacity: .8;
+		}
+		
+		&--number {
+		}
+		
+		&--operation {
+			background: $orange;
+		}
+		
+		&--clear, &--save {
+			background: $red;
+		}
+		
+		&--wide {
+			width: 50%;
+		}
+		
+	}
 }

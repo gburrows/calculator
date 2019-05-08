@@ -1,27 +1,70 @@
 const app = () => {
-    // Select DOM elements
-    const   appElement          = document.querySelectorAll('.app')[0],
-            calculatorElement   = document.querySelectorAll('.calculator')[0],
-            numberButton        = document.querySelectorAll('[data-number]'),
-            operationButton     = document.querySelectorAll('[data-operation]'),
-            decimalButton       = document.querySelectorAll('[data-decimal]')[0];
-            allClearButton      = document.querySelectorAll('[data-clear]')[0],
-            saveButton          = document.querySelectorAll('[data-save]')[0];
-
-
-    // Fade in after CSS loads
-    setTimeout(() => {
-        appElement.setAttribute('style', 'opacity: 1;');
-    }, 500);
-
-    class Calculator {
-        constructor() {
-
-        }
+	// Select DOM elements
+	const   appElement          = document.querySelectorAll('.app')[0],
+	        calculatorElement   = document.querySelectorAll('.calculator')[0],
+	        allButtons          = document.querySelectorAll('.calculator__button');
+	
+	
+	// Fade in after CSS loads
+	setTimeout(() => {
+		appElement.setAttribute('style', 'opacity: 1;');
+	}, 500);
+	
+	
+	class Calculator {
+		constructor() {
+			
+    }
+    
+    enterNumber(number) {
     }
 
-    const calculator = new Calculator();
+    enterOperation(operation) {
+    }
 
+    enterDecimal() {
+    }
+
+    equals() {
+    }
+
+    clear() {
+    }
+
+    save() {
+    }
+	}
+	
+	const calculator = new Calculator();
+	
+	// Add event handlers
+	allButtons.forEach(button => {
+    let dataButtonType  = Object.keys(button.dataset)[0],
+        dataButtonValue = button.dataset[dataButtonType];
+		
+		button.addEventListener('click', () => {
+			switch(dataButtonType) {
+        case 'number':
+          calculator.enterNumber(dataButtonValue);
+				  break;
+        case 'operation':
+          calculator.enterOperation(dataButtonValue);
+				  break;
+        case 'decimal':
+          calculator.enterDecimal();
+          break;
+        case 'equals':
+          calculator.equals();
+				  break;
+				case 'clear':
+          calculator.clear();
+          break;
+				case 'save':
+          calculator.save();
+          break;
+			}
+		})  
+	})
 };
 
 document.addEventListener('DOMContentLoaded', app);

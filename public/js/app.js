@@ -95,24 +95,83 @@
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var app = function app() {
   // Select DOM elements
   var appElement = document.querySelectorAll('.app')[0],
       calculatorElement = document.querySelectorAll('.calculator')[0],
-      numberButton = document.querySelectorAll('[data-number]'),
-      operationButton = document.querySelectorAll('[data-operation]'),
-      decimalButton = document.querySelectorAll('[data-decimal]')[0];
-  allClearButton = document.querySelectorAll('[data-clear]')[0], saveButton = document.querySelectorAll('[data-save]')[0]; // Fade in after CSS loads
+      allButtons = document.querySelectorAll('.calculator__button'); // Fade in after CSS loads
 
   setTimeout(function () {
     appElement.setAttribute('style', 'opacity: 1;');
   }, 500);
 
-  var Calculator = function Calculator() {
-    _classCallCheck(this, Calculator);
-  };
+  var Calculator =
+  /*#__PURE__*/
+  function () {
+    function Calculator() {
+      _classCallCheck(this, Calculator);
+    }
 
-  var calculator = new Calculator();
+    _createClass(Calculator, [{
+      key: "enterNumber",
+      value: function enterNumber(number) {}
+    }, {
+      key: "enterOperation",
+      value: function enterOperation(operation) {}
+    }, {
+      key: "enterDecimal",
+      value: function enterDecimal() {}
+    }, {
+      key: "equals",
+      value: function equals() {}
+    }, {
+      key: "clear",
+      value: function clear() {}
+    }, {
+      key: "save",
+      value: function save() {}
+    }]);
+
+    return Calculator;
+  }();
+
+  var calculator = new Calculator(); // Add event handlers
+
+  allButtons.forEach(function (button) {
+    var dataButtonType = Object.keys(button.dataset)[0],
+        dataButtonValue = button.dataset[dataButtonType];
+    button.addEventListener('click', function () {
+      switch (dataButtonType) {
+        case 'number':
+          calculator.enterNumber(dataButtonValue);
+          break;
+
+        case 'operation':
+          calculator.enterOperation(dataButtonValue);
+          break;
+
+        case 'decimal':
+          calculator.enterDecimal();
+          break;
+
+        case 'equals':
+          calculator.equals();
+          break;
+
+        case 'clear':
+          calculator.clear();
+          break;
+
+        case 'save':
+          calculator.save();
+          break;
+      }
+    });
+  });
 };
 
 document.addEventListener('DOMContentLoaded', app);
