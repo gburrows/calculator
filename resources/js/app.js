@@ -10,8 +10,8 @@ const app = () => {
 	// Fade in after CSS loads
 	setTimeout(() => {
 		appElement.setAttribute('style', 'opacity: 1;');
-	}, 500);
-	
+  }, 500);
+  
 	
 	class Calculator {
 		constructor(resultAnswer, resultCalculation) {
@@ -47,8 +47,24 @@ const app = () => {
       if (this.operationUsed) {
         this.equalsLocked = false;
       }
-
+      
       this.resultAnswer.innerText = this.currentNumber;
+      adjustFontSizeResultAnswer();
+    }
+
+    enterDecimal() {
+      if (this.currentNumber !== null && this.currentNumber.includes('.')) return;
+      
+      // Equals has been used so pressing a number will AC
+      if (this.equalsUsed) {
+        this.clear()
+      }
+
+      if (this.currentNumber !== null) {
+        this.currentNumber = this.currentNumber + '.';
+      } else {
+        this.currentNumber = '0.';
+      }
     }
 
     enterOperation(operation) {
@@ -66,9 +82,11 @@ const app = () => {
       if (this.operationUsed) {
         this.calculateNewTotal();
         this.resultAnswer.innerText = this.totalSum;
+        adjustFontSizeResultAnswer();
       } else {
         this.totalSum = parseInt(this.resultAnswer.innerText);
         this.resultAnswer.innerText = 0;
+        adjustFontSizeResultAnswer();
         this.operationUsed = true;
       }
       
@@ -76,16 +94,15 @@ const app = () => {
       this.resultCalculation.innerText = this.currentCalculation;
       this.currentNumber = null;
       this.equalsLocked = true;
-    }
 
-    enterDecimal() {
+      adjustFontSizeResultCalculation();
     }
 
     calculateNewTotal() {
       if (this.totalSum === null) return;
 
-      let currentNumberInt = parseInt(this.currentNumber);
-
+      let currentNumberInt = parseFloat(this.currentNumber);
+      
       switch(this.currentOperation) {
         case '÷':
           this.totalSum = this.totalSum / currentNumberInt;
@@ -116,12 +133,15 @@ const app = () => {
       this.calculateNewTotal();
       this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
       this.resultAnswer.innerText = this.totalSum;
+      adjustFontSizeResultAnswer();
       this.equalsUsed = true;
     }
 
     clear() {
       this.resultAnswer.innerText = '0';
+      adjustFontSizeResultAnswer();
       this.resultCalculation.innerText = '';
+      adjustFontSizeResultCalculation();
       this.currentCalculation = null;
       this.currentOperation = null;
       this.currentNumber = null;
@@ -163,7 +183,34 @@ const app = () => {
           break;
 			}
 		})  
-	})
+  });
+
+  // Adjust font size based on string length  
+  function adjustFontSizeResultAnswer() {
+    if (resultAnswer.innerText.length > 12) {
+      resultAnswer.style.fontSize = '1.8rem';
+    } else if (resultAnswer.innerText.length >= 6) {
+      resultAnswer.style.fontSize = '2.8em';
+    } else if (resultAnswer.innerText.length < 5) {
+      resultAnswer.style.fontSize = '6rem';
+    } 
+  }
+  function adjustFontSizeResultCalculation() {
+    if (resultCalculation.innerText.length > 22) {
+      resultCalculation.style.fontSize = '1.6rem';
+      resultCalculation.style.height = '3.8rem';
+      resultCalculation.style.lineHeight = '1.8rem';
+    } else if (resultCalculation.innerText.length >= 15) {
+      resultCalculation.style.fontSize = '1.8em';
+      resultCalculation.style.height = '2.8rem';
+      resultCalculation.style.lineHeight = '2.8rem';
+    } else if (resultCalculation.innerText.length < 14) {
+      resultCalculation.style.fontSize = '2.8rem';
+      resultCalculation.style.height = '2.8rem';
+      resultCalculation.style.lineHeight = '2.8rem';
+    } 
+  } 
+
 };
 
 document.addEventListener('DOMContentLoaded', app);

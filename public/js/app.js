@@ -150,6 +150,22 @@ var app = function app() {
         }
 
         this.resultAnswer.innerText = this.currentNumber;
+        adjustFontSizeResultAnswer();
+      }
+    }, {
+      key: "enterDecimal",
+      value: function enterDecimal() {
+        if (this.currentNumber !== null && this.currentNumber.includes('.')) return; // Equals has been used so pressing a number will AC
+
+        if (this.equalsUsed) {
+          this.clear();
+        }
+
+        if (this.currentNumber !== null) {
+          this.currentNumber = this.currentNumber + '.';
+        } else {
+          this.currentNumber = '0.';
+        }
       }
     }, {
       key: "enterOperation",
@@ -167,9 +183,11 @@ var app = function app() {
         if (this.operationUsed) {
           this.calculateNewTotal();
           this.resultAnswer.innerText = this.totalSum;
+          adjustFontSizeResultAnswer();
         } else {
           this.totalSum = parseInt(this.resultAnswer.innerText);
           this.resultAnswer.innerText = 0;
+          adjustFontSizeResultAnswer();
           this.operationUsed = true;
         }
 
@@ -177,15 +195,13 @@ var app = function app() {
         this.resultCalculation.innerText = this.currentCalculation;
         this.currentNumber = null;
         this.equalsLocked = true;
+        adjustFontSizeResultCalculation();
       }
-    }, {
-      key: "enterDecimal",
-      value: function enterDecimal() {}
     }, {
       key: "calculateNewTotal",
       value: function calculateNewTotal() {
         if (this.totalSum === null) return;
-        var currentNumberInt = parseInt(this.currentNumber);
+        var currentNumberInt = parseFloat(this.currentNumber);
 
         switch (this.currentOperation) {
           case '÷':
@@ -221,13 +237,16 @@ var app = function app() {
         this.calculateNewTotal();
         this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
         this.resultAnswer.innerText = this.totalSum;
+        adjustFontSizeResultAnswer();
         this.equalsUsed = true;
       }
     }, {
       key: "clear",
       value: function clear() {
         this.resultAnswer.innerText = '0';
+        adjustFontSizeResultAnswer();
         this.resultCalculation.innerText = '';
+        adjustFontSizeResultCalculation();
         this.currentCalculation = null;
         this.currentOperation = null;
         this.currentNumber = null;
@@ -275,7 +294,33 @@ var app = function app() {
           break;
       }
     });
-  });
+  }); // Adjust font size based on string length  
+
+  function adjustFontSizeResultAnswer() {
+    if (resultAnswer.innerText.length > 12) {
+      resultAnswer.style.fontSize = '1.8rem';
+    } else if (resultAnswer.innerText.length >= 6) {
+      resultAnswer.style.fontSize = '2.8em';
+    } else if (resultAnswer.innerText.length < 5) {
+      resultAnswer.style.fontSize = '6rem';
+    }
+  }
+
+  function adjustFontSizeResultCalculation() {
+    if (resultCalculation.innerText.length > 22) {
+      resultCalculation.style.fontSize = '1.6rem';
+      resultCalculation.style.height = '3.8rem';
+      resultCalculation.style.lineHeight = '1.8rem';
+    } else if (resultCalculation.innerText.length >= 15) {
+      resultCalculation.style.fontSize = '1.8em';
+      resultCalculation.style.height = '2.8rem';
+      resultCalculation.style.lineHeight = '2.8rem';
+    } else if (resultCalculation.innerText.length < 14) {
+      resultCalculation.style.fontSize = '2.8rem';
+      resultCalculation.style.height = '2.8rem';
+      resultCalculation.style.lineHeight = '2.8rem';
+    }
+  }
 };
 
 document.addEventListener('DOMContentLoaded', app);
