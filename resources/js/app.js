@@ -18,9 +18,12 @@ const app = () => {
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
       this.totalSum = null;
+      this.totalString = null;
+      this.previousNumber = null;
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
+      this.equalsPressed = false;
     }
     
     enterNumber(number) {
@@ -31,18 +34,23 @@ const app = () => {
         this.currentNumber = number;
       }
       this.resultAnswer.innerText = this.currentNumber;
+      console.log('fdsalkh', typeof this.currentNumber)
     }
 
     enterOperation(operation) {
+      // Return if not entered a number
       if (this.currentNumber === null) return;
 
+      this.totalSum = parseInt(this.resultAnswer.innerText);
       this.currentOperation = operation;
 
+      // Shows sum from using operations
       if (this.currentCalculation !== null) {
         this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
       } else {
         this.currentCalculation = this.currentNumber + ' ' + operation;
       }
+
       this.resultCalculation.innerText = this.currentCalculation;
       this.resultAnswer.innerText = 0;
       this.currentNumber = null;
@@ -51,8 +59,31 @@ const app = () => {
     enterDecimal() {
     }
 
-    equals() {
+    calculateNewTotal() {
+      if (this.totalSum === null) return;
 
+      let currentNumberInt = parseInt(this.currentNumber);
+      
+      switch(this.currentOperation) {
+        case '÷':
+          this.totalSum = this.totalSum / currentNumberInt;
+          break;
+        case '×':
+          this.totalSum = this.totalSum * currentNumberInt;
+          break;
+        case '-':
+          this.totalSum = this.totalSum - currentNumberInt;
+          break;
+        case '+':
+          this.totalSum = this.totalSum + currentNumberInt;
+          break;
+      }
+    }
+
+    equals() {
+      this.calculateNewTotal();
+      this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
+      this.resultAnswer.innerText = this.totalSum;
     }
 
     clear() {

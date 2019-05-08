@@ -93,6 +93,8 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -119,9 +121,12 @@ var app = function app() {
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
       this.totalSum = null;
+      this.totalString = null;
+      this.previousNumber = null;
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
+      this.equalsPressed = false;
     }
 
     _createClass(Calculator, [{
@@ -135,12 +140,15 @@ var app = function app() {
         }
 
         this.resultAnswer.innerText = this.currentNumber;
+        console.log('fdsalkh', _typeof(this.currentNumber));
       }
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {
+        // Return if not entered a number
         if (this.currentNumber === null) return;
-        this.currentOperation = operation;
+        this.totalSum = parseInt(this.resultAnswer.innerText);
+        this.currentOperation = operation; // Shows sum from using operations
 
         if (this.currentCalculation !== null) {
           this.currentCalculation = this.currentCalculation + ' ' + this.currentNumber + ' ' + operation;
@@ -156,8 +164,36 @@ var app = function app() {
       key: "enterDecimal",
       value: function enterDecimal() {}
     }, {
+      key: "calculateNewTotal",
+      value: function calculateNewTotal() {
+        if (this.totalSum === null) return;
+        var currentNumberInt = parseInt(this.currentNumber);
+
+        switch (this.currentOperation) {
+          case '÷':
+            this.totalSum = this.totalSum / currentNumberInt;
+            break;
+
+          case '×':
+            this.totalSum = this.totalSum * currentNumberInt;
+            break;
+
+          case '-':
+            this.totalSum = this.totalSum - currentNumberInt;
+            break;
+
+          case '+':
+            this.totalSum = this.totalSum + currentNumberInt;
+            break;
+        }
+      }
+    }, {
       key: "equals",
-      value: function equals() {}
+      value: function equals() {
+        this.calculateNewTotal();
+        this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
+        this.resultAnswer.innerText = this.totalSum;
+      }
     }, {
       key: "clear",
       value: function clear() {
