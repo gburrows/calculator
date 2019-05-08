@@ -126,12 +126,16 @@ var app = function app() {
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
-      this.equalsPressed = false;
+      this.equalsUsed = false;
     }
 
     _createClass(Calculator, [{
       key: "enterNumber",
       value: function enterNumber(number) {
+        if (this.equalsUsed) {
+          this.clear();
+        }
+
         if (this.currentNumber !== null) {
           this.currentNumber = this.currentNumber + number;
         } else {
@@ -145,8 +149,8 @@ var app = function app() {
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {
-        // Return if not entered a number
-        if (this.currentNumber === null) return;
+        // Return if not entered a number OR equals has been used
+        if (this.currentNumber === null || this.equalsUsed) return;
         this.totalSum = parseInt(this.resultAnswer.innerText);
         this.currentOperation = operation; // Shows sum from using operations
 
@@ -193,6 +197,7 @@ var app = function app() {
         this.calculateNewTotal();
         this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
         this.resultAnswer.innerText = this.totalSum;
+        this.equalsUsed = true;
       }
     }, {
       key: "clear",
@@ -201,6 +206,7 @@ var app = function app() {
         this.resultCalculation.innerText = '';
         this.currentCalculation = null;
         this.currentNumber = null;
+        this.equalsUsed = false;
       }
     }, {
       key: "save",

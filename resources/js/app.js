@@ -23,10 +23,14 @@ const app = () => {
       this.currentNumber = null;
       this.currentCalculation = null;
       this.currentOperation = null;
-      this.equalsPressed = false;
+      this.equalsUsed = false;
     }
     
     enterNumber(number) {
+      if (this.equalsUsed) {
+        this.clear()
+      }
+
       if (this.currentNumber !== null) {
         this.currentNumber = this.currentNumber + number;
       } else {
@@ -38,8 +42,8 @@ const app = () => {
     }
 
     enterOperation(operation) {
-      // Return if not entered a number
-      if (this.currentNumber === null) return;
+      // Return if not entered a number OR equals has been used
+      if (this.currentNumber === null || this.equalsUsed) return;
 
       this.totalSum = parseInt(this.resultAnswer.innerText);
       this.currentOperation = operation;
@@ -63,6 +67,7 @@ const app = () => {
       if (this.totalSum === null) return;
 
       let currentNumberInt = parseInt(this.currentNumber);
+
       
       switch(this.currentOperation) {
         case '÷':
@@ -84,6 +89,7 @@ const app = () => {
       this.calculateNewTotal();
       this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
       this.resultAnswer.innerText = this.totalSum;
+      this.equalsUsed = true;
     }
 
     clear() {
@@ -91,6 +97,7 @@ const app = () => {
       this.resultCalculation.innerText = '';
       this.currentCalculation = null;
       this.currentNumber = null;
+      this.equalsUsed = false;
     }
 
     save() {
