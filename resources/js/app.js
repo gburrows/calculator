@@ -2,9 +2,11 @@ const app = () => {
 	// Select DOM elements
 	const   appElement          = document.querySelectorAll('.app')[0],
 	        calculatorElement   = document.querySelectorAll('.calculator')[0],
-	        allButtons          = document.querySelectorAll('.calculator__button');
-	
-	
+          allButtons          = document.querySelectorAll('.calculator__button'),
+          resultCalculation   = document.querySelectorAll('.calculator__result-calculation')[0];
+          resultAnswer        = document.querySelectorAll('.calculator__result-answer')[0],
+  
+          
 	// Fade in after CSS loads
 	setTimeout(() => {
 		appElement.setAttribute('style', 'opacity: 1;');
@@ -12,11 +14,23 @@ const app = () => {
 	
 	
 	class Calculator {
-		constructor() {
-			
+		constructor(resultAnswer, resultCalculation) {
+      this.resultAnswer = resultAnswer;
+      this.resultCalculation = resultCalculation;
+      this.totalSum = 0;
+      this.currentNumber = null;
+      this.currentCalculation = null;
+      this.currentOperation = null;
     }
     
     enterNumber(number) {
+      if (this.currentNumber !== null) {
+        this.currentNumber = this.currentNumber + number;
+      } else {
+        if (number === '0') return;
+        this.currentNumber = number;
+      }
+      this.resultAnswer.innerText = this.currentNumber;
     }
 
     enterOperation(operation) {
@@ -29,13 +43,15 @@ const app = () => {
     }
 
     clear() {
+      this.resultAnswer.innerText = '0';
+      this.currentNumber = null;
     }
 
     save() {
     }
 	}
 	
-	const calculator = new Calculator();
+	const calculator = new Calculator(resultAnswer, resultCalculation);
 	
 	// Add event handlers
 	allButtons.forEach(button => {

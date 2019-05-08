@@ -103,8 +103,9 @@ var app = function app() {
   // Select DOM elements
   var appElement = document.querySelectorAll('.app')[0],
       calculatorElement = document.querySelectorAll('.calculator')[0],
-      allButtons = document.querySelectorAll('.calculator__button'); // Fade in after CSS loads
-
+      allButtons = document.querySelectorAll('.calculator__button'),
+      resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0];
+  resultAnswer = document.querySelectorAll('.calculator__result-answer')[0], // Fade in after CSS loads
   setTimeout(function () {
     appElement.setAttribute('style', 'opacity: 1;');
   }, 500);
@@ -112,13 +113,29 @@ var app = function app() {
   var Calculator =
   /*#__PURE__*/
   function () {
-    function Calculator() {
+    function Calculator(resultAnswer, resultCalculation) {
       _classCallCheck(this, Calculator);
+
+      this.resultAnswer = resultAnswer;
+      this.resultCalculation = resultCalculation;
+      this.totalSum = 0;
+      this.currentNumber = null;
+      this.currentCalculation = null;
+      this.currentOperation = null;
     }
 
     _createClass(Calculator, [{
       key: "enterNumber",
-      value: function enterNumber(number) {}
+      value: function enterNumber(number) {
+        if (this.currentNumber !== null) {
+          this.currentNumber = this.currentNumber + number;
+        } else {
+          if (number === '0') return;
+          this.currentNumber = number;
+        }
+
+        this.resultAnswer.innerText = this.currentNumber;
+      }
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {}
@@ -130,7 +147,10 @@ var app = function app() {
       value: function equals() {}
     }, {
       key: "clear",
-      value: function clear() {}
+      value: function clear() {
+        this.resultAnswer.innerText = '0';
+        this.currentNumber = null;
+      }
     }, {
       key: "save",
       value: function save() {}
@@ -139,7 +159,7 @@ var app = function app() {
     return Calculator;
   }();
 
-  var calculator = new Calculator(); // Add event handlers
+  var calculator = new Calculator(resultAnswer, resultCalculation); // Add event handlers
 
   allButtons.forEach(function (button) {
     var dataButtonType = Object.keys(button.dataset)[0],

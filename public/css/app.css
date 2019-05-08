@@ -10736,8 +10736,10 @@ body {
   width: 25%;
   padding: 1.6rem 0;
   background: #f6827a;
+  border: none;
   border-top: 1px solid #29363b33;
   font-size: 2.6rem;
+  color: white;
   line-height: 1;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -10748,6 +10750,10 @@ body {
 
 .calculator__button:active {
   opacity: 0.8;
+}
+
+.calculator__button:focus {
+  outline: 0;
 }
 
 .calculator__button--operation {
