@@ -118,19 +118,21 @@ var app = function app() {
 
       this.resultAnswer = resultAnswer;
       this.resultCalculation = resultCalculation;
-      this.totalSum = 0; // this.totalString = null;
-      // this.previousNumber = null;
-
+      this.totalSum = 0;
       this.currentNumber = null;
       this.currentCalculation = null;
-      this.currentOperation = null;
-      this.equalsUsed = false;
+      this.currentOperation = null; // Once equals is used, pressing number automatically ACs or user can run previous operation many times
+
+      this.equalsUsed = false; // Locked until user has used operation and a number (not 0)
+
+      this.equalsLocked = true;
       this.operationUsed = false;
     }
 
     _createClass(Calculator, [{
       key: "enterNumber",
       value: function enterNumber(number) {
+        // Equals has been used so pressing a number will AC
         if (this.equalsUsed) {
           this.clear();
         }
@@ -140,6 +142,11 @@ var app = function app() {
         } else {
           if (number === '0') return;
           this.currentNumber = number;
+        } // Unlocking equals as user has used operation and a number (not 0)
+
+
+        if (this.operationUsed) {
+          this.equalsLocked = false;
         }
 
         this.resultAnswer.innerText = this.currentNumber;
@@ -200,6 +207,16 @@ var app = function app() {
     }, {
       key: "equals",
       value: function equals() {
+        // Disabled if no operation has been pressed on fresh AC
+        if (!this.operationUsed) {
+          return;
+        } // Disabled if user has not yet used an operation and a number (not 0)
+
+
+        if (this.equalsLocked) {
+          return;
+        }
+
         this.calculateNewTotal();
         this.resultCalculation.innerText = this.currentCalculation + ' ' + this.currentNumber + ' =';
         this.resultAnswer.innerText = this.totalSum;
@@ -214,6 +231,7 @@ var app = function app() {
         this.currentOperation = null;
         this.currentNumber = null;
         this.equalsUsed = false;
+        this.equalsLocked = true;
         this.operationUsed = false;
       }
     }, {
