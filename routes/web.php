@@ -18,3 +18,10 @@ Route::get('/', function () {
 Route::get('/calculations', function () {
     return view('calculations');
 });
+
+Route::get('/calculations', 'CalculationsController@getCSV');
+
+Route::post('/save', 'AjaxController@saveNumber');
+
+
+

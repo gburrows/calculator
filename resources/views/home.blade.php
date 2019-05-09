@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
 </head>
 <body>
+<a class="page-link" href="/calculations" style="float: right;">Calculations</a>
 <div class="app" style="opacity: 0;">
     <div class="app__inner">
         <div class="calculator">

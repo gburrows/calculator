@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const app = () => {
 	// Select DOM elements
 	const   appElement          = document.querySelectorAll('.app')[0],
@@ -153,6 +155,17 @@ const app = () => {
     }
 
     save() {
+      axios.post('/save', {
+        numberSaved: this.totalSum
+      })
+      .then(function (response) {
+        alert('The number has been saved, please see /calculations to view the saved numbers.');
+        // console.log(response);
+      })
+      .catch(function (error) {
+        alert('The number could not be saved at this time, please try again.');
+        // alert(error);
+      });
     }
 	}
 	
