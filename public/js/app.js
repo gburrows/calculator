@@ -2001,8 +2001,9 @@ var app = function app() {
   var appElement = document.querySelectorAll('.app')[0],
       calculatorElement = document.querySelectorAll('.calculator')[0],
       allButtons = document.querySelectorAll('.calculator__button'),
-      resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0];
-  resultAnswer = document.querySelectorAll('.calculator__result-answer')[0], // Fade in after CSS loads
+      resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0],
+      resultAnswer = document.querySelectorAll('.calculator__result-answer')[0]; // Fade in after CSS loads
+
   setTimeout(function () {
     appElement.setAttribute('style', 'opacity: 1;');
   }, 500);
@@ -2046,7 +2047,7 @@ var app = function app() {
           this.equalsLocked = false;
         }
 
-        this.resultAnswer.innerText = numberWithCommas(this.currentNumber);
+        this.resultAnswer.innerText = this.numberWithCommas(this.currentNumber);
         adjustFontSizeResultAnswer();
       }
     }, {
@@ -2071,19 +2072,18 @@ var app = function app() {
         if (this.currentNumber === null || this.equalsUsed) return; // Update calculation area
 
         if (this.currentCalculation !== null) {
-          this.currentCalculation = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' ' + operation;
+          this.currentCalculation = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' ' + operation;
         } else {
-          this.currentCalculation = numberWithCommas(this.currentNumber) + ' ' + operation;
+          this.currentCalculation = this.numberWithCommas(this.currentNumber) + ' ' + operation;
         } // Show sum in answer area
 
 
         if (this.operationUsed) {
           this.calculateNewTotal();
-          this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+          this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
           adjustFontSizeResultAnswer();
         } else {
-          this.totalSum = numberRemoveCommas(this.resultAnswer.innerText); // debugger;
-
+          this.totalSum = this.numberRemoveCommas(this.resultAnswer.innerText);
           this.resultAnswer.innerText = 0;
           adjustFontSizeResultAnswer();
           this.operationUsed = true;
@@ -2094,30 +2094,6 @@ var app = function app() {
         this.currentNumber = null;
         this.equalsLocked = true;
         adjustFontSizeResultCalculation();
-      }
-    }, {
-      key: "calculateNewTotal",
-      value: function calculateNewTotal() {
-        if (this.totalSum === null) return;
-        var currentNumberInt = parseFloat(this.currentNumber); // debugger;
-
-        switch (this.currentOperation) {
-          case '÷':
-            this.totalSum = this.totalSum / currentNumberInt;
-            break;
-
-          case '×':
-            this.totalSum = this.totalSum * currentNumberInt;
-            break;
-
-          case '-':
-            this.totalSum = this.totalSum - currentNumberInt;
-            break;
-
-          case '+':
-            this.totalSum = this.totalSum + currentNumberInt;
-            break;
-        }
       }
     }, {
       key: "equals",
@@ -2133,10 +2109,10 @@ var app = function app() {
         }
 
         this.calculateNewTotal();
-        this.resultCalculation.innerText = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' =';
-        this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+        this.resultCalculation.innerText = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' =';
+        this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
         adjustFontSizeResultAnswer();
-        this.equalsUsed = true; // debugger;
+        this.equalsUsed = true;
       }
     }, {
       key: "clear",
@@ -2158,10 +2134,48 @@ var app = function app() {
         axios.post('/save', {
           numberSaved: this.totalSum
         }).then(function (response) {
-          alert('The number has been saved, please see /calculations to view the saved numbers.'); // console.log(response);
+          alert('The number has been saved, please see /calculations to view the saved numbers.');
         })["catch"](function (error) {
-          alert('The number could not be saved at this time, please try again.'); // alert(error);
+          alert('The number could not be saved at this time, please try again.');
         });
+      }
+    }, {
+      key: "calculateNewTotal",
+      value: function calculateNewTotal() {
+        if (this.totalSum === null) return;
+        var currentNumberInt = parseFloat(this.currentNumber);
+
+        switch (this.currentOperation) {
+          case '÷':
+            this.totalSum = this.totalSum / currentNumberInt;
+            break;
+
+          case '×':
+            this.totalSum = this.totalSum * currentNumberInt;
+            break;
+
+          case '-':
+            this.totalSum = this.totalSum - currentNumberInt;
+            break;
+
+          case '+':
+            this.totalSum = this.totalSum + currentNumberInt;
+            break;
+        }
+      }
+    }, {
+      key: "numberWithCommas",
+      value: function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+      }
+    }, {
+      key: "numberRemoveCommas",
+      value: function numberRemoveCommas(x) {
+        x = x.replace(/\,/g, '');
+        x = parseInt(x, 10);
+        return x;
       }
     }]);
 
@@ -2200,20 +2214,7 @@ var app = function app() {
           break;
       }
     });
-  });
-
-  function numberWithCommas(x) {
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  }
-
-  function numberRemoveCommas(x) {
-    x = x.replace(/\,/g, '');
-    x = parseInt(x, 10);
-    return x;
-  } // Adjust font size based on string length  
-
+  }); // Adjust font size based on string length  
 
   function adjustFontSizeResultAnswer() {
     if (resultAnswer.innerText.length > 12) {
