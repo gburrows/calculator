@@ -3,10 +3,9 @@ const axios = require('axios');
 const app = () => {
 	// Select DOM elements
 	const   appElement          = document.querySelectorAll('.app')[0],
-	        calculatorElement   = document.querySelectorAll('.calculator')[0],
-          allButtons          = document.querySelectorAll('.calculator__button'),
-          resultCalculation   = document.querySelectorAll('.calculator__result-calculation')[0];
-          resultAnswer        = document.querySelectorAll('.calculator__result-answer')[0],
+	        calculatorElement   = document.querySelectorAll('.calculator__buttons')[0],
+          resultCalculation   = document.querySelectorAll('.calculator__result-calculation')[0],
+          resultAnswer        = document.querySelectorAll('.calculator__result-answer')[0];
   
           
 	// Fade in after CSS loads
@@ -50,7 +49,7 @@ const app = () => {
         this.equalsLocked = false;
       }
       
-      this.resultAnswer.innerText = numberWithCommas(this.currentNumber);
+      this.resultAnswer.innerText = this.numberWithCommas(this.currentNumber);
       adjustFontSizeResultAnswer();
     }
 
@@ -70,24 +69,23 @@ const app = () => {
     }
 
     enterOperation(operation) {
-      // Return if not entered a number OR equals has been used
-      if (this.currentNumber === null || this.equalsUsed) return;
+      // Return if not entered a number OR only decimal OR equals has been used
+      if (this.currentNumber === null || this.currentNumber === '0.' || this.equalsUsed) return;
 
       // Update calculation area
       if (this.currentCalculation !== null) {
-        this.currentCalculation = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' ' + operation;
+        this.currentCalculation = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' ' + operation;
       } else {
-        this.currentCalculation = numberWithCommas(this.currentNumber) + ' ' + operation;
+        this.currentCalculation = this.numberWithCommas(this.currentNumber) + ' ' + operation;
       }
 
       // Show sum in answer area
       if (this.operationUsed) {
         this.calculateNewTotal();
-        this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+        this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
         adjustFontSizeResultAnswer();
       } else {
-        this.totalSum = numberRemoveCommas(this.resultAnswer.innerText);
-        // debugger;
+        this.totalSum = this.numberRemoveCommas(this.resultAnswer.innerText);
         this.resultAnswer.innerText = 0;
         adjustFontSizeResultAnswer();
         this.operationUsed = true;
@@ -99,27 +97,6 @@ const app = () => {
       this.equalsLocked = true;
 
       adjustFontSizeResultCalculation();
-    }
-
-    calculateNewTotal() {
-      if (this.totalSum === null) return;
-
-      let currentNumberInt = parseFloat(this.currentNumber);
-      // debugger;
-      switch(this.currentOperation) {
-        case '÷':
-          this.totalSum = this.totalSum / currentNumberInt;
-          break;
-        case '×':
-          this.totalSum = this.totalSum * currentNumberInt;
-          break;
-        case '-':
-          this.totalSum = this.totalSum - currentNumberInt;
-          break;
-        case '+':
-          this.totalSum = this.totalSum + currentNumberInt;
-          break;
-      }
     }
 
     equals() {
@@ -134,11 +111,10 @@ const app = () => {
       }
 
       this.calculateNewTotal();
-      this.resultCalculation.innerText = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' =';
-      this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+      this.resultCalculation.innerText = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' =';
+      this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
       adjustFontSizeResultAnswer();
       this.equalsUsed = true;
-      // debugger;
     }
 
     clear() {
@@ -160,58 +136,74 @@ const app = () => {
       })
       .then(function (response) {
         alert('The number has been saved, please see /calculations to view the saved numbers.');
-        // console.log(response);
       })
       .catch(function (error) {
         alert('The number could not be saved at this time, please try again.');
-        // alert(error);
       });
+    }
+
+    calculateNewTotal() {
+      if (this.totalSum === null) return;
+
+      let currentNumberInt = parseFloat(this.currentNumber);
+      
+      switch(this.currentOperation) {
+        case '÷':
+          this.totalSum = this.totalSum / currentNumberInt;
+          break;
+        case '×':
+          this.totalSum = this.totalSum * currentNumberInt;
+          break;
+        case '-':
+          this.totalSum = this.totalSum - currentNumberInt;
+          break;
+        case '+':
+          this.totalSum = this.totalSum + currentNumberInt;
+          break;
+      }
+    }
+
+    numberWithCommas(x) {
+      let parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    }
+  
+    numberRemoveCommas(x) {
+      x = x.replace(/\,/g,'');
+      x = parseFloat(x);
+      return x;
     }
 	}
 	
 	const calculator = new Calculator(resultAnswer, resultCalculation);
 	
-	// Add event handlers
-	allButtons.forEach(button => {
-    let dataButtonType  = Object.keys(button.dataset)[0],
-        dataButtonValue = button.dataset[dataButtonType];
-		
-		button.addEventListener('click', () => {
-			switch(dataButtonType) {
-        case 'number':
-          calculator.enterNumber(dataButtonValue);
-				  break;
-        case 'operation':
-          calculator.enterOperation(dataButtonValue);
-				  break;
-        case 'decimal':
-          calculator.enterDecimal();
-          break;
-        case 'equals':
-          calculator.equals();
-				  break;
-				case 'clear':
-          calculator.clear();
-          break;
-				case 'save':
-          calculator.save();
-          break;
-			}
-		})  
-  });
+	// Add event handler
+  calculatorElement.addEventListener('click', (e) => {
+    let dataButtonType  = Object.keys(e.target.dataset)[0],
+        dataButtonValue = e.target.dataset[dataButtonType];
 
-  function numberWithCommas(x) {
-    let parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  }
-
-  function numberRemoveCommas(x) {
-    x=x.replace(/\,/g,''); 
-    x=parseInt(x,10);
-    return x;
-  }
-
+    switch(dataButtonType) {
+      case 'number':
+        calculator.enterNumber(dataButtonValue);
+        break;
+      case 'operation':
+        calculator.enterOperation(dataButtonValue);
+        break;
+      case 'decimal':
+        calculator.enterDecimal();
+        break;
+      case 'equals':
+        calculator.equals();
+        break;
+      case 'clear':
+        calculator.clear();
+        break;
+      case 'save':
+        calculator.save();
+        break;
+    }
+  }, true);
 
   // Adjust font size based on string length  
   function adjustFontSizeResultAnswer() {

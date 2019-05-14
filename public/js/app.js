@@ -1999,10 +1999,10 @@ var axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var app = function app() {
   // Select DOM elements
   var appElement = document.querySelectorAll('.app')[0],
-      calculatorElement = document.querySelectorAll('.calculator')[0],
-      allButtons = document.querySelectorAll('.calculator__button'),
-      resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0];
-  resultAnswer = document.querySelectorAll('.calculator__result-answer')[0], // Fade in after CSS loads
+      calculatorElement = document.querySelectorAll('.calculator__buttons')[0],
+      resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0],
+      resultAnswer = document.querySelectorAll('.calculator__result-answer')[0]; // Fade in after CSS loads
+
   setTimeout(function () {
     appElement.setAttribute('style', 'opacity: 1;');
   }, 500);
@@ -2046,7 +2046,7 @@ var app = function app() {
           this.equalsLocked = false;
         }
 
-        this.resultAnswer.innerText = numberWithCommas(this.currentNumber);
+        this.resultAnswer.innerText = this.numberWithCommas(this.currentNumber);
         adjustFontSizeResultAnswer();
       }
     }, {
@@ -2067,23 +2067,22 @@ var app = function app() {
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {
-        // Return if not entered a number OR equals has been used
-        if (this.currentNumber === null || this.equalsUsed) return; // Update calculation area
+        // Return if not entered a number OR only decimal OR equals has been used
+        if (this.currentNumber === null || this.currentNumber === '0.' || this.equalsUsed) return; // Update calculation area
 
         if (this.currentCalculation !== null) {
-          this.currentCalculation = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' ' + operation;
+          this.currentCalculation = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' ' + operation;
         } else {
-          this.currentCalculation = numberWithCommas(this.currentNumber) + ' ' + operation;
+          this.currentCalculation = this.numberWithCommas(this.currentNumber) + ' ' + operation;
         } // Show sum in answer area
 
 
         if (this.operationUsed) {
           this.calculateNewTotal();
-          this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+          this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
           adjustFontSizeResultAnswer();
         } else {
-          this.totalSum = numberRemoveCommas(this.resultAnswer.innerText); // debugger;
-
+          this.totalSum = this.numberRemoveCommas(this.resultAnswer.innerText);
           this.resultAnswer.innerText = 0;
           adjustFontSizeResultAnswer();
           this.operationUsed = true;
@@ -2094,30 +2093,6 @@ var app = function app() {
         this.currentNumber = null;
         this.equalsLocked = true;
         adjustFontSizeResultCalculation();
-      }
-    }, {
-      key: "calculateNewTotal",
-      value: function calculateNewTotal() {
-        if (this.totalSum === null) return;
-        var currentNumberInt = parseFloat(this.currentNumber); // debugger;
-
-        switch (this.currentOperation) {
-          case '÷':
-            this.totalSum = this.totalSum / currentNumberInt;
-            break;
-
-          case '×':
-            this.totalSum = this.totalSum * currentNumberInt;
-            break;
-
-          case '-':
-            this.totalSum = this.totalSum - currentNumberInt;
-            break;
-
-          case '+':
-            this.totalSum = this.totalSum + currentNumberInt;
-            break;
-        }
       }
     }, {
       key: "equals",
@@ -2133,10 +2108,10 @@ var app = function app() {
         }
 
         this.calculateNewTotal();
-        this.resultCalculation.innerText = this.currentCalculation + ' ' + numberWithCommas(this.currentNumber) + ' =';
-        this.resultAnswer.innerText = numberWithCommas(this.totalSum);
+        this.resultCalculation.innerText = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' =';
+        this.resultAnswer.innerText = this.numberWithCommas(this.totalSum);
         adjustFontSizeResultAnswer();
-        this.equalsUsed = true; // debugger;
+        this.equalsUsed = true;
       }
     }, {
       key: "clear",
@@ -2158,62 +2133,86 @@ var app = function app() {
         axios.post('/save', {
           numberSaved: this.totalSum
         }).then(function (response) {
-          alert('The number has been saved, please see /calculations to view the saved numbers.'); // console.log(response);
+          alert('The number has been saved, please see /calculations to view the saved numbers.');
         })["catch"](function (error) {
-          alert('The number could not be saved at this time, please try again.'); // alert(error);
+          alert('The number could not be saved at this time, please try again.');
         });
+      }
+    }, {
+      key: "calculateNewTotal",
+      value: function calculateNewTotal() {
+        if (this.totalSum === null) return;
+        var currentNumberInt = parseFloat(this.currentNumber);
+
+        switch (this.currentOperation) {
+          case '÷':
+            this.totalSum = this.totalSum / currentNumberInt;
+            break;
+
+          case '×':
+            this.totalSum = this.totalSum * currentNumberInt;
+            break;
+
+          case '-':
+            this.totalSum = this.totalSum - currentNumberInt;
+            break;
+
+          case '+':
+            this.totalSum = this.totalSum + currentNumberInt;
+            break;
+        }
+      }
+    }, {
+      key: "numberWithCommas",
+      value: function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+      }
+    }, {
+      key: "numberRemoveCommas",
+      value: function numberRemoveCommas(x) {
+        x = x.replace(/\,/g, '');
+        x = parseFloat(x);
+        return x;
       }
     }]);
 
     return Calculator;
   }();
 
-  var calculator = new Calculator(resultAnswer, resultCalculation); // Add event handlers
+  var calculator = new Calculator(resultAnswer, resultCalculation); // Add event handler
 
-  allButtons.forEach(function (button) {
-    var dataButtonType = Object.keys(button.dataset)[0],
-        dataButtonValue = button.dataset[dataButtonType];
-    button.addEventListener('click', function () {
-      switch (dataButtonType) {
-        case 'number':
-          calculator.enterNumber(dataButtonValue);
-          break;
+  calculatorElement.addEventListener('click', function (e) {
+    var dataButtonType = Object.keys(e.target.dataset)[0],
+        dataButtonValue = e.target.dataset[dataButtonType];
 
-        case 'operation':
-          calculator.enterOperation(dataButtonValue);
-          break;
+    switch (dataButtonType) {
+      case 'number':
+        calculator.enterNumber(dataButtonValue);
+        break;
 
-        case 'decimal':
-          calculator.enterDecimal();
-          break;
+      case 'operation':
+        calculator.enterOperation(dataButtonValue);
+        break;
 
-        case 'equals':
-          calculator.equals();
-          break;
+      case 'decimal':
+        calculator.enterDecimal();
+        break;
 
-        case 'clear':
-          calculator.clear();
-          break;
+      case 'equals':
+        calculator.equals();
+        break;
 
-        case 'save':
-          calculator.save();
-          break;
-      }
-    });
-  });
+      case 'clear':
+        calculator.clear();
+        break;
 
-  function numberWithCommas(x) {
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  }
-
-  function numberRemoveCommas(x) {
-    x = x.replace(/\,/g, '');
-    x = parseInt(x, 10);
-    return x;
-  } // Adjust font size based on string length  
-
+      case 'save':
+        calculator.save();
+        break;
+    }
+  }, true); // Adjust font size based on string length  
 
   function adjustFontSizeResultAnswer() {
     if (resultAnswer.innerText.length > 12) {
