@@ -1999,8 +1999,7 @@ var axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var app = function app() {
   // Select DOM elements
   var appElement = document.querySelectorAll('.app')[0],
-      calculatorElement = document.querySelectorAll('.calculator')[0],
-      allButtons = document.querySelectorAll('.calculator__button'),
+      calculatorElement = document.querySelectorAll('.calculator__buttons')[0],
       resultCalculation = document.querySelectorAll('.calculator__result-calculation')[0],
       resultAnswer = document.querySelectorAll('.calculator__result-answer')[0]; // Fade in after CSS loads
 
@@ -2068,8 +2067,8 @@ var app = function app() {
     }, {
       key: "enterOperation",
       value: function enterOperation(operation) {
-        // Return if not entered a number OR equals has been used
-        if (this.currentNumber === null || this.equalsUsed) return; // Update calculation area
+        // Return if not entered a number OR only decimal OR equals has been used
+        if (this.currentNumber === null || this.currentNumber === '0.' || this.equalsUsed) return; // Update calculation area
 
         if (this.currentCalculation !== null) {
           this.currentCalculation = this.currentCalculation + ' ' + this.numberWithCommas(this.currentNumber) + ' ' + operation;
@@ -2174,7 +2173,7 @@ var app = function app() {
       key: "numberRemoveCommas",
       value: function numberRemoveCommas(x) {
         x = x.replace(/\,/g, '');
-        x = parseInt(x, 10);
+        x = parseFloat(x);
         return x;
       }
     }]);
@@ -2182,39 +2181,38 @@ var app = function app() {
     return Calculator;
   }();
 
-  var calculator = new Calculator(resultAnswer, resultCalculation); // Add event handlers
+  var calculator = new Calculator(resultAnswer, resultCalculation); // Add event handler
 
-  allButtons.forEach(function (button) {
-    var dataButtonType = Object.keys(button.dataset)[0],
-        dataButtonValue = button.dataset[dataButtonType];
-    button.addEventListener('click', function () {
-      switch (dataButtonType) {
-        case 'number':
-          calculator.enterNumber(dataButtonValue);
-          break;
+  calculatorElement.addEventListener('click', function (e) {
+    var dataButtonType = Object.keys(e.target.dataset)[0],
+        dataButtonValue = e.target.dataset[dataButtonType];
 
-        case 'operation':
-          calculator.enterOperation(dataButtonValue);
-          break;
+    switch (dataButtonType) {
+      case 'number':
+        calculator.enterNumber(dataButtonValue);
+        break;
 
-        case 'decimal':
-          calculator.enterDecimal();
-          break;
+      case 'operation':
+        calculator.enterOperation(dataButtonValue);
+        break;
 
-        case 'equals':
-          calculator.equals();
-          break;
+      case 'decimal':
+        calculator.enterDecimal();
+        break;
 
-        case 'clear':
-          calculator.clear();
-          break;
+      case 'equals':
+        calculator.equals();
+        break;
 
-        case 'save':
-          calculator.save();
-          break;
-      }
-    });
-  }); // Adjust font size based on string length  
+      case 'clear':
+        calculator.clear();
+        break;
+
+      case 'save':
+        calculator.save();
+        break;
+    }
+  }, true); // Adjust font size based on string length  
 
   function adjustFontSizeResultAnswer() {
     if (resultAnswer.innerText.length > 12) {
